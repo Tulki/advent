@@ -1,16 +1,5 @@
 from shared import *
 
-
-class SnowSlope:
-    def __init__(self, slopeMap):
-        self.map = slopeMap
-        self.width = len(slopeMap[0])
-        self.length = len(slopeMap)
-
-    def is_tree(self, x, y):
-        mapX = x % self.width
-        mapY = y
-
 # Part A and B
 def solveA():
     slopeMap = split_lines('day3.input')

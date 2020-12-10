@@ -25,7 +25,7 @@ def solveB():
     adapters = adapters + [max(adapters)+3]
 
     # This is too expensive unless we memoize the recursion results.
-    # We will memoize where memoizedConfigTallies[len(adapters)-1] = the result for this call
+    # We will memoize where memoizedConfigTallies[len(adapters)] = the result for this call
     memoizedConfigTallies = [-1 for x in range(len(adapters)+1)]
     
     return tallyAdapterConfigs(adapters, 0, memoizedConfigTallies)

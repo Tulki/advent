@@ -19,7 +19,7 @@ def extractPassports(passportFile, currPassport):
 
 # Part A
 def solveA():
-    passportFile = split_lines('day4.input')
+    passportFile = split_lines('day04.input')
     
     # im using recursion even if it kills me
     sys.setrecursionlimit(len(passportFile)+2)
@@ -44,7 +44,7 @@ def valid_passportA(passportDict):
 
 # Part B
 def solveB():
-    passportFile = split_lines('day4.input')
+    passportFile = split_lines('day04.input')
     
     # im using recursion even if it kills me
     sys.setrecursionlimit(len(passportFile)+2)

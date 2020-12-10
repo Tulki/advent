@@ -31,7 +31,7 @@ class EncodingChecker:
 
 # Part A
 def solveA():
-    elements = split_lines('day9.input')
+    elements = split_lines('day09.input')
     checker = EncodingChecker(25)
     
     for elem in elements:
@@ -42,7 +42,7 @@ def solveA():
 
 # Part B
 def solveB():
-    elements = split_lines('day9.input')
+    elements = split_lines('day09.input')
     invalidNumber = solveA()
 
     weaknessSifter = [(int)(elements[0])]

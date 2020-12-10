@@ -3,7 +3,7 @@ import copy
 
 # Part A
 def solveA():
-    instructions = split_lines('day8.input')
+    instructions = split_lines('day08.input')
     answer = detectLoop(instructions, 0, 0, set())
     print(answer)
 
@@ -35,7 +35,7 @@ def detectLoop(instructions, instructNum, accumulator, loopDetectorSet):
 
 # Part B
 def solveB():
-    instructions = split_lines('day8.input') + ['end +0']
+    instructions = split_lines('day08.input') + ['end +0']
     fixOneInstruction(instructions, 0, 0, set())
 
 # Almost the same as detectLoop, except this can recurse at most once into a regular detectLoop call, with a flipped instruction.

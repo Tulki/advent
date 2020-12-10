@@ -42,7 +42,7 @@ class MemoizedBagInspector:
 
 # Part A
 def solveA():
-    bagRules = split_lines('day7.input')
+    bagRules = split_lines('day07.input')
     inspector = MemoizedBagInspector(bagRules)
     answer = 0
     for line in bagRules:
@@ -57,7 +57,7 @@ def solveA():
 # Part B
 # Ends up being pretty much an inversion of part A, but we're including total counts instead of just > 0 counts.
 def solveB():
-    bagRules = split_lines('day7.input')
+    bagRules = split_lines('day07.input')
     inspector = MemoizedBagInspector(bagRules)
     answer = 0
     for line in bagRules:

@@ -2,12 +2,12 @@ from shared import *
 
 # Part A and B
 def solveA():
-    slopeMap = split_lines('day3.input')
+    slopeMap = split_lines('day03.input')
     result = recurse(slopeMap, 0, 3, 1)
     print(result)
 
 def solveB():
-    slopeMap = split_lines('day3.input')
+    slopeMap = split_lines('day03.input')
     result1 = recurse(slopeMap, 0, 1, 1)
     result2 = recurse(slopeMap, 0, 3, 1)
     result3 = recurse(slopeMap, 0, 5, 1)

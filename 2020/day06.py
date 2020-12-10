@@ -3,7 +3,7 @@ import sys
 
 # Part A
 def solveA():
-    declarations = split_lines('day6.input')
+    declarations = split_lines('day06.input')
     sys.setrecursionlimit(len(declarations)+2)
 
     answer = countAnyoneYes(declarations, set())
@@ -26,7 +26,7 @@ def countAnyoneYes(declarations, unionSet):
 
 # Part B
 def solveB():
-    declarations = split_lines('day6.input')
+    declarations = split_lines('day06.input')
     sys.setrecursionlimit(len(declarations)+2)
 
     answer = countAllYes(declarations, fullSet())

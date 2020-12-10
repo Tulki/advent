@@ -20,7 +20,7 @@ def recurse(entries):
     return recurse(entries[1:])
 
 def solveA():
-    entries = split_lines('day1.input')
+    entries = split_lines('day01.input')
     answer = recurse(entries)
     print(answer)
 
@@ -63,7 +63,7 @@ def tailCurse(head, body, entries):
 
 
 def solveB():
-    entries = split_lines('day1.input')
+    entries = split_lines('day01.input')
     answer = headCurse(entries)
     print(answer)
 

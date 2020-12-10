@@ -2,7 +2,7 @@ from shared import *
 
 # Part A
 def solveA():
-    passes = split_lines('day5.input')
+    passes = split_lines('day05.input')
     maxID = recursiveMaxSeatID(passes)
     print(maxID)
 
@@ -44,7 +44,7 @@ def findPassID(passString, rows, cols):
 
 # Part B
 def solveB():
-    passes = split_lines('day5.input')
+    passes = split_lines('day05.input')
     allSeatIDs = [seatID for seatID in range(seatID(127, 7))]
     guessWho = recursiveElimination(allSeatIDs, passes)
 

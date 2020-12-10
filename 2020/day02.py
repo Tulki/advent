@@ -24,7 +24,7 @@ class PasswordRecord:
 
 
 def solveA():
-    records = split_lines('day2.input')
+    records = split_lines('day02.input')
     result = recurseA(records)
     print(result)
 
@@ -40,7 +40,7 @@ def recurseA(records):
 
 # Part B
 def solveB():
-    records = split_lines('day2.input')
+    records = split_lines('day02.input')
     result = recurseB(records)
     print(result)
 

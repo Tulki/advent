@@ -8,3 +8,9 @@ def split_lines(filename):
 
     return lines
 
+def split_lines_as_ints(filename):
+	lines = []
+	for line in open(filename, 'r'):
+		lines.append((int)(line.strip()))
+
+	return lines

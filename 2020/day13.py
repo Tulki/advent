@@ -27,30 +27,39 @@ def checkOffset(time, busID, offset):
     return (time + offset) % busID == 0
 
 def checkOffsets(time, busIDs):
-    offsetChecks = []
+    correctOffsets = 0
     for i in range(len(busIDs)):
         check = checkOffset(time, busIDs[i], i)
         if not check:
             # Short circuiting will save us time.
-            return False
+            return correctOffsets
+        else:
+            correctOffsets += 1
+    return correctOffsets
 
-    return True
+def computeLCM(busIDs, correctOffsetCount):
+    correctIDs = busIDs[:correctOffsetCount]
+    correctIDs = [ID for ID in correctIDs if ID != 'x']
+    LCM = 1
+    for ID in correctIDs:
+        LCM *= ID
+    return LCM
 
 def solveB():
     schedule = split_lines('day13.input')
     busIDs = ['x' if busID == 'x' else (int)(busID) for busID in schedule[1].split(',')]
 
-    # Skipping timestamps based on the highest bus ID will save us time.
-    maxBusID = max([busID for busID in busIDs if busID != 'x'])
-    offsetOfMax = busIDs.index(maxBusID)
+    # Skipping timestamps based on the LCM of checked busIDs will save us time.
+    LCM = 1
     
     time = 0
-    iteration = 0
-    correctOffsets = False
-    while not correctOffsets:
-        iteration += 1
-        time = (iteration * maxBusID) - offsetOfMax
-        if (iteration % 1000000) == 0:
-            print(time)
+    correctOffsets = 0
+    while correctOffsets < len(busIDs):
+        time += LCM
+        print(time)
         correctOffsets = checkOffsets(time, busIDs)
+        newLCM = computeLCM(busIDs, correctOffsets)
+        if newLCM > LCM:
+            LCM = newLCM
+        
     return time

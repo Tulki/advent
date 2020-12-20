@@ -121,6 +121,43 @@ class ImageTile:
         for i in range(len(self.subTileIDs)):
             self.subTileIDs[i] = self.subTileIDs[i] + them.subTileIDs[i]
 
+    def removeBorders(self):
+        newImage = []
+        for y in range(self.height()):
+            if (not (str(y).endswith('0'))) and (not (str(y).endswith('9'))):
+                newImage.append('')
+                for x in range(self.width()):
+                    if (not (str(x).endswith('0'))) and (not (str(x).endswith('9'))):
+                        newImage[len(newImage)-1] += self.tileImage[y][x]
+
+        self.tileImage = newImage
+                
+
+    def convolve(self, mask):
+        for x in range(self.width() - len(mask[0]) + 1):
+            for y in range(self.height() - len(mask) + 1):
+                match = self.convolveAt(x, y, mask)
+                if match:
+                    self.stampMonster(x, y, mask)
+                
+
+    def convolveAt(self, x, y, mask):
+        for i in range(len(mask[0])):
+            for j in range(len(mask)):
+                imageChar = self.tileImage[y+j][x+i]
+                maskChar = mask[j][i]
+                if imageChar == '.' and maskChar == '#':
+                    return False
+        return True
+
+    def stampMonster(self, x, y, mask):
+        for i in range(len(mask[0])):
+            for j in range(len(mask)):
+                maskChar = mask[j][i]
+                if maskChar == '#':
+                    self.tileImage[y+j] = self.tileImage[y+j][0:x+i] + 'O' + self.tileImage[y+j][x+i+1:]
+
+
 # Part A
 def solveA():
     lines = split_lines('day20.input')
@@ -163,3 +200,38 @@ def solveA():
     subTileIDs = wholePicture.subTileIDs
     answer = subTileIDs[0][0] * subTileIDs[0][tilesAcross-1] * subTileIDs[tilesAcross-1][0] * subTileIDs[tilesAcross-1][tilesAcross-1]
     return answer
+
+# Part B
+def solveB():
+    lines = split_lines('day20_fullimage.input')
+    mask = split_lines('day20_mask.input')
+    tiles = []
+    tileLines = []
+
+    for i in range(len(lines)):
+        if lines[i] == '':
+            tiles.append(ImageTile(tileID, tileLines))
+            tileID = -1
+            tileLines = []
+        elif lines[i].startswith('Tile'):
+            tileID = (int)(lines[i][5:len(lines[i])-1])
+        else:
+            tileLines.append(lines[i])
+    tiles.append(ImageTile(tileID, tileLines))
+
+    image = tiles[0]
+    image.removeBorders()
+
+    for i in range(4):
+        image.convolve(mask)
+        image.rotateClockwise()
+    image.flipHorizontal()
+    for i in range(4):
+        image.convolve(mask)
+        image.rotateClockwise()
+
+    answer = 0
+    for line in image.tileImage:
+        answer += line.count('#')
+    return answer
+    

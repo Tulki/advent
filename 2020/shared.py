@@ -14,3 +14,10 @@ def split_lines_as_ints(filename):
 		lines.append((int)(line.strip()))
 
 	return lines
+
+def split_lines_no_strip(filename):
+    lines = []
+    for line in open(filename, 'r'):
+        lines.append(line)
+
+    return lines

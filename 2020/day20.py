@@ -142,19 +142,22 @@ def solveA():
     tilesAcross = (int)(math.sqrt(len(tiles)))
     fullWidth = tilesAcross * tiles[0].width()
 
-    random.shuffle(tiles)
-
     while len(tiles) > 1:
         print(len(tiles))
         tileA = tiles[0]
         tiles = tiles[1:]
+        match = False
         for i in range(len(tiles)):
             if tileA.tryToLineUp(tiles[i], fullWidth):
                 tileA.joinMyEastToTheirWest(tiles[i])
                 tiles = tiles[0:i] + tiles[i+1:len(tiles)]
+                match = True
                 break
-        tiles.append(tileA)
-        
+
+        if match:
+            tiles = [tileA] + tiles
+        else:
+            tiles.append(tileA)
 
     wholePicture = tiles[0]
     subTileIDs = wholePicture.subTileIDs

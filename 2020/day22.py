@@ -64,7 +64,7 @@ def solveB():
         else:
             deck.append((int)(line))
 
-    gameWinner = recursiveCombat(1, copy.deepcopy(player1), copy.deepcopy(player2))
+    gameWinner = recursiveCombat(dict(), 1, copy.deepcopy(player1), copy.deepcopy(player2))
 
     if gameWinner[0] == "player1":
         scoreTally = []
@@ -78,10 +78,9 @@ def solveB():
         return sum(scoreTally)
 
 # Returns a tuple ('winner', deck) where 'winner' is 'player1' or 'player2' and the deck is the winner's deck order.
-def recursiveCombat(gameNumber, player1, player2):
+def recursiveCombat(previousStates, gameNumber, player1, player2):
     print('=== Game ' + (str)(gameNumber) + ' ===')
     print()
-    previousStates = dict()
     roundNumber = 0
 
     while len(player1) > 0 and len(player2) > 0:
@@ -113,7 +112,7 @@ def recursiveCombat(gameNumber, player1, player2):
         if len(player1) >= play1 and len(player2) >= play2:
             print("Playing a sub-game to determine the winner...")
             print()
-            subgame = recursiveCombat(gameNumber + 1, copy.deepcopy(player1), copy.deepcopy(player2))
+            subgame = recursiveCombat(previousStates, gameNumber + 1, copy.deepcopy(player1), copy.deepcopy(player2))
             roundWinner = subgame[0]
             print("... anyway, back to game " + (str)(gameNumber) + ".")
         else:

@@ -64,7 +64,7 @@ def solveB():
         else:
             deck.append((int)(line))
 
-    gameWinner = recursiveCombat(1, copy.deepcopy(player1), copy.deepcopy(player2))
+    gameWinner = recursiveCombat(dict(), 1, copy.deepcopy(player1), copy.deepcopy(player2))
 
     if gameWinner[0] == "player1":
         scoreTally = []
@@ -78,7 +78,7 @@ def solveB():
         return sum(scoreTally)
 
 # Returns a tuple ('winner', deck) where 'winner' is 'player1' or 'player2' and the deck is the winner's deck order.
-def recursiveCombat(gameNumber, player1, player2):
+def recursiveCombat(memoizedGames, gameNumber, player1, player2):
     print('=== Game ' + (str)(gameNumber) + ' ===')
     print()
     previousStates = dict()
@@ -113,7 +113,15 @@ def recursiveCombat(gameNumber, player1, player2):
         if len(player1) >= play1 and len(player2) >= play2:
             print("Playing a sub-game to determine the winner...")
             print()
-            subgame = recursiveCombat(gameNumber + 1, copy.deepcopy(player1[0:play1]), copy.deepcopy(player2[0:play2]))
+            gameID = ', '.join([str(num) for num in player1[0:play1]]) + ":" + ', '.join([str(num) for num in player2[0:play2]])
+            subgame = None
+            print("Memoized Games: " + str(len(memoizedGames.keys())))
+            if gameID in memoizedGames:
+                print("MEMOIZATION SHORT CIRCUIT")
+                subgame = memoizedGames[gameID]
+            else:
+                subgame = recursiveCombat(memoizedGames, gameNumber + 1, copy.deepcopy(player1[0:play1]), copy.deepcopy(player2[0:play2]))
+                memoizedGames[gameID] = subgame
             roundWinner = subgame[0]
             print("... anyway, back to game " + (str)(gameNumber) + ".")
         else:

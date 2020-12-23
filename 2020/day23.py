@@ -1,88 +1,125 @@
 from shared import *
 
+# CupGame implemented using a linked list and lookup table for individual nodes.
 class CupGame:
-    # In 'state', the first element is at 12 o'clock.
-    # We will maintain that state[0] is the "current cup".
-    state = None
-    currentCupIndex = None
+    currentCupNode = None
     minCupNumber = None
     maxCupNumber = None
 
-    movesPerformed = None
+    # Quick lookup for individual nodes.
+    lookupTable = None
 
-    def __init__(self, orderString):
-        self.state = []
-        self.currentCupIndex = 0
-        self.movesPerformed = 0
+    def __init__(self, numArray):
+        self.minCupNumber = min(numArray)
+        self.maxCupNumber = max(numArray)
+        self.lookupTable = dict()
+        firstNode = CupNode(numArray[0])
+        self.currentCupNode = firstNode
+        self.lookupTable[str(numArray[0])] = firstNode
 
-        for char in orderString:
-            self.state.append((int)(char))
+        for num in numArray[1:]:
+            nextNode = CupNode(num)
+            self.currentCupNode.setNext(nextNode)
+            self.currentCupNode = self.currentCupNode.nextNode
+            self.lookupTable[str(num)] = nextNode
 
-        self.minCupNumber = min(self.state)
-        self.maxCupNumber = max(self.state)
+        self.currentCupNode.setNext(firstNode)
+        self.currentCupNode = firstNode
 
-    def padUpTo(self, maxValue):
-        i = self.maxCupNumber
-        while i < maxValue:
-            i += 1
-            self.state.append(i)
-        self.maxCupNumber = max(self.state)
-    
     def pluckThreeCups(self):
-        threeCups = self.state[1:4]
-        self.state = [self.state[0]] + self.state[4:]
-        return threeCups
+        plucked = self.currentCupNode.nextNode
+        stitchTo = self.currentCupNode.nextNode.nextNode.nextNode.nextNode
+        self.currentCupNode.setNext(stitchTo)
 
-    def getDestinationCupIndex(self):
-        currentCup = self.state[0]
+        plucked.nextNode.nextNode.setNext(None)
+        return plucked
+
+    def getDestinationCupNode(self, plucked):
+        pluckedNums = dict()
+        pluckedNums[str(plucked.cupNumber)] = True
+        pluckedNums[str(plucked.nextNode.cupNumber)] = True
+        pluckedNums[str(plucked.nextNode.nextNode.cupNumber)] = True
         
-        destinationCup = currentCup - 1
-        while destinationCup not in self.state:
+        currentCupNum = self.currentCupNode.cupNumber
+
+        destinationCup = currentCupNum - 1
+        while (str(destinationCup) not in self.lookupTable) or (str(destinationCup) in pluckedNums):
             destinationCup -= 1
             if destinationCup < self.minCupNumber:
                 destinationCup = self.maxCupNumber
 
-        return self.state.index(destinationCup)
+        destinationCupNode = self.lookupTable[str(destinationCup)]
+        return destinationCupNode
 
-    def placePluckedCups(self, afterIndex, pluckedCups):
-        self.state = self.state[0:afterIndex+1] + pluckedCups + self.state[afterIndex+1:]
+    def placePluckedCups(self, afterNode, plucked):
+        oldNext = afterNode.nextNode
+        afterNode.setNext(plucked)
+        plucked.nextNode.nextNode.setNext(oldNext)
 
     def selectNewCurrentCup(self):
-        # We "select" a new current cup by rotating to the next one.
-        self.state = self.state[1:] + [self.state[0]]
+        self.currentCupNode = self.currentCupNode.nextNode
 
     def move(self):
-        pluckedCups = self.pluckThreeCups()
-        destinationCupIndex = self.getDestinationCupIndex()
-        self.placePluckedCups(destinationCupIndex, pluckedCups)
+        plucked = self.pluckThreeCups()
+        destinationCupNode = self.getDestinationCupNode(plucked)
+        self.placePluckedCups(destinationCupNode, plucked)
         self.selectNewCurrentCup()
 
-        self.movesPerformed += 1
+    def answerA(self):
+        answer = ''
+        cupNode = self.lookupTable['1']
+        for i in range(len(self.lookupTable.keys())-1):
+            cupNode = cupNode.nextNode
+            answer += str(cupNode.cupNumber)
+        return answer
+
+    def answerB(self):
+        answer = 1
+        cupNode = self.lookupTable['1']
+        answer *= cupNode.nextNode.cupNumber
+        answer *= cupNode.nextNode.nextNode.cupNumber
+        return answer
+
+class CupNode:
+    cupNumber = None
+    nextNode = None
+
+    def __init__(self, cupNumber):
+        self.cupNumber = cupNumber
+
+    def setNext(self, nextNode):
+        self.nextNode = nextNode
 
 # Part A
 def solveA():
     inputLines = split_lines('day23.input')
-    game = CupGame(inputLines[0])
+    cupNums = []
+    for char in inputLines[0]:
+        cupNums.append((int)(char))
+    
+    game = CupGame(cupNums)
 
     for i in range(100):
         game.move()
 
-    finalState = game.state
-    pos1 = finalState.index(1)
-    answer = ''
-    for i in range(len(finalState)-1):
-        probeIndex = (pos1+i+1) % len(finalState)
-        answer += (str)(finalState[probeIndex])
-    return answer
+    return game.answerA()
 
 # Part B
 def solveB():
     inputLines = split_lines('day23.input')
-    game = CupGame(inputLines[0])
-    game.padUpTo(1000000)
+    cupNums = []
+    for char in inputLines[0]:
+        cupNums.append((int)(char))
+
+    # Pad input up to 1M entries
+    maxNum = max(cupNums)
+    while len(cupNums) < 1000000:
+        maxNum += 1
+        cupNums.append(maxNum)
+
+    game = CupGame(cupNums)
 
     for i in range(1000000):
         game.move()
-        if game.movesPerformed % 100 == 0:
-            print(game.movesPerformed)
+
     return game

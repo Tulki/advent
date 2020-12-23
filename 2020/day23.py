@@ -119,7 +119,7 @@ def solveB():
 
     game = CupGame(cupNums)
 
-    for i in range(1000000):
+    for i in range(10000000):
         game.move()
 
-    return game
+    return game.answerB()
